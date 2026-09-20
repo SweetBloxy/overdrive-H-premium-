@@ -1,0 +1,1033 @@
+--// 💫 • SweetHub • Murder Duels
+--// Premium UI • UI ONLY
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
+
+local Player = Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+--==================================================
+-- CONFIG
+--==================================================
+
+local ICON = "rbxthumb://type=Asset&id=134367775098113&w=420&h=420"
+
+local COLORS = {
+    Background = Color3.fromRGB(12, 13, 17),
+    Surface = Color3.fromRGB(19, 20, 26),
+    Surface2 = Color3.fromRGB(25, 26, 33),
+    Surface3 = Color3.fromRGB(31, 32, 40),
+
+    Text = Color3.fromRGB(245, 245, 248),
+    SubText = Color3.fromRGB(155, 157, 168),
+
+    Accent = Color3.fromRGB(130, 170, 255),
+    Accent2 = Color3.fromRGB(170, 135, 255),
+
+    Green = Color3.fromRGB(100, 220, 145),
+    Red = Color3.fromRGB(255, 95, 105)
+}
+
+local OPEN_SIZE = UDim2.fromOffset(440, 315)
+
+--==================================================
+-- CLEAN OLD UI
+--==================================================
+
+local Old = PlayerGui:FindFirstChild("SweetHubMurderDuels")
+if Old then
+    Old:Destroy()
+end
+
+--==================================================
+-- HELPERS
+--==================================================
+
+local function Tween(Object, Time, Properties, Style, Direction)
+    local Info = TweenInfo.new(
+        Time or 0.25,
+        Style or Enum.EasingStyle.Quint,
+        Direction or Enum.EasingDirection.Out
+    )
+
+    local T = TweenService:Create(Object, Info, Properties)
+    T:Play()
+    return T
+end
+
+local function Corner(Object, Radius)
+    local C = Instance.new("UICorner")
+    C.CornerRadius = UDim.new(0, Radius)
+    C.Parent = Object
+    return C
+end
+
+local function Stroke(Object, Transparency)
+    local S = Instance.new("UIStroke")
+    S.Color = Color3.fromRGB(80, 82, 95)
+    S.Thickness = 1
+    S.Transparency = Transparency or 0.45
+    S.Parent = Object
+    return S
+end
+
+--==================================================
+-- SCREEN GUI
+--==================================================
+
+local Gui = Instance.new("ScreenGui")
+Gui.Name = "SweetHubMurderDuels"
+Gui.ResetOnSpawn = false
+Gui.IgnoreGuiInset = true
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+Gui.Parent = PlayerGui
+
+--==================================================
+-- STARTUP ANIMATION
+-- SWEET ← → HUB
+--==================================================
+
+local Intro = Instance.new("Frame")
+Intro.Size = UDim2.fromScale(1, 1)
+Intro.BackgroundTransparency = 1
+Intro.Parent = Gui
+
+local Sweet = Instance.new("TextLabel")
+Sweet.BackgroundTransparency = 1
+Sweet.AnchorPoint = Vector2.new(1, 0.5)
+Sweet.Position = UDim2.new(0, -40, 0.5, 0)
+Sweet.Size = UDim2.fromOffset(210, 70)
+Sweet.Font = Enum.Font.GothamBlack
+Sweet.Text = "Sweet"
+Sweet.TextSize = 52
+Sweet.TextColor3 = COLORS.Text
+Sweet.TextXAlignment = Enum.TextXAlignment.Right
+Sweet.Parent = Intro
+
+local Hub = Instance.new("TextLabel")
+Hub.BackgroundTransparency = 1
+Hub.AnchorPoint = Vector2.new(0, 0.5)
+Hub.Position = UDim2.new(1, 40, 0.5, 0)
+Hub.Size = UDim2.fromOffset(210, 70)
+Hub.Font = Enum.Font.GothamBlack
+Hub.Text = "Hub"
+Hub.TextSize = 52
+Hub.TextColor3 = COLORS.Accent
+Hub.TextXAlignment = Enum.TextXAlignment.Left
+Hub.Parent = Intro
+
+-- Small glow-like duplicate
+local SweetGlow = Sweet:Clone()
+SweetGlow.TextColor3 = COLORS.Accent2
+SweetGlow.TextTransparency = 0.75
+SweetGlow.ZIndex = 0
+SweetGlow.Parent = Intro
+
+local HubGlow = Hub:Clone()
+HubGlow.TextColor3 = COLORS.Accent
+HubGlow.TextTransparency = 0.75
+HubGlow.ZIndex = 0
+HubGlow.Parent = Intro
+
+Sweet.ZIndex = 2
+Hub.ZIndex = 2
+
+local MergeInfo = TweenInfo.new(
+    1.45,
+    Enum.EasingStyle.Quint,
+    Enum.EasingDirection.Out
+)
+
+Tween(Sweet, 1.45, {
+    Position = UDim2.new(0.5, -8, 0.5, 0)
+})
+
+Tween(Hub, 1.45, {
+    Position = UDim2.new(0.5, 8, 0.5, 0)
+})
+
+Tween(SweetGlow, 1.45, {
+    Position = UDim2.new(0.5, -8, 0.5, 0)
+})
+
+Tween(HubGlow, 1.45, {
+    Position = UDim2.new(0.5, 8, 0.5, 0)
+})
+
+task.wait(1.6)
+
+-- Murder Duels subtitle
+local IntroSubtitle = Instance.new("TextLabel")
+IntroSubtitle.BackgroundTransparency = 1
+IntroSubtitle.AnchorPoint = Vector2.new(0.5, 0)
+IntroSubtitle.Position = UDim2.new(0.5, 0, 0.5, 42)
+IntroSubtitle.Size = UDim2.fromOffset(300, 30)
+IntroSubtitle.Font = Enum.Font.GothamMedium
+IntroSubtitle.Text = "• Murder Duels •"
+IntroSubtitle.TextSize = 16
+IntroSubtitle.TextColor3 = COLORS.SubText
+IntroSubtitle.TextTransparency = 1
+IntroSubtitle.Parent = Intro
+
+Tween(IntroSubtitle, 0.45, {
+    TextTransparency = 0
+})
+
+task.wait(0.7)
+
+Tween(Sweet, 0.3, {TextTransparency = 1})
+Tween(Hub, 0.3, {TextTransparency = 1})
+Tween(SweetGlow, 0.3, {TextTransparency = 1})
+Tween(HubGlow, 0.3, {TextTransparency = 1})
+Tween(IntroSubtitle, 0.3, {TextTransparency = 1})
+
+task.wait(0.35)
+
+Intro:Destroy()
+
+--==================================================
+-- MAIN WINDOW
+--==================================================
+
+local Main = Instance.new("Frame")
+Main.Name = "Main"
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.Position = UDim2.fromScale(0.5, 0.5)
+Main.Size = UDim2.fromOffset(10, 10)
+Main.BackgroundColor3 = COLORS.Background
+Main.BorderSizePixel = 0
+Main.ClipsDescendants = true
+Main.Parent = Gui
+
+Corner(Main, 16)
+Stroke(Main, 0.25)
+
+--==================================================
+-- HEADER
+--==================================================
+
+local Header = Instance.new("Frame")
+Header.BackgroundTransparency = 1
+Header.Position = UDim2.fromOffset(14, 10)
+Header.Size = UDim2.new(1, -28, 0, 48)
+Header.Parent = Main
+
+local Icon = Instance.new("ImageLabel")
+Icon.BackgroundTransparency = 1
+Icon.Size = UDim2.fromOffset(40, 40)
+Icon.Position = UDim2.fromOffset(0, 3)
+Icon.Image = ICON
+Icon.Parent = Header
+
+Corner(Icon, 11)
+
+local Title = Instance.new("TextLabel")
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.fromOffset(50, 1)
+Title.Size = UDim2.new(1, -100, 0, 25)
+Title.Font = Enum.Font.GothamBold
+Title.Text = "SweetHub"
+Title.TextSize = 19
+Title.TextColor3 = COLORS.Text
+Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Header
+
+local Subtitle = Instance.new("TextLabel")
+Subtitle.BackgroundTransparency = 1
+Subtitle.Position = UDim2.fromOffset(51, 24)
+Subtitle.Size = UDim2.new(1, -100, 0, 18)
+Subtitle.Font = Enum.Font.GothamMedium
+Subtitle.Text = "Murder Duels"
+Subtitle.TextSize = 12
+Subtitle.TextColor3 = COLORS.SubText
+Subtitle.TextXAlignment = Enum.TextXAlignment.Left
+Subtitle.Parent = Header
+
+local Close = Instance.new("TextButton")
+Close.BackgroundColor3 = COLORS.Surface2
+Close.BorderSizePixel = 0
+Close.AnchorPoint = Vector2.new(1, 0.5)
+Close.Position = UDim2.new(1, 0, 0.5, 0)
+Close.Size = UDim2.fromOffset(34, 34)
+Close.Font = Enum.Font.GothamBold
+Close.Text = "×"
+Close.TextSize = 22
+Close.TextColor3 = COLORS.SubText
+Close.AutoButtonColor = false
+Close.Parent = Header
+
+Corner(Close, 10)
+
+--==================================================
+-- TAB BAR
+--==================================================
+
+local TabBar = Instance.new("Frame")
+TabBar.BackgroundColor3 = COLORS.Surface
+TabBar.BorderSizePixel = 0
+TabBar.Position = UDim2.fromOffset(14, 65)
+TabBar.Size = UDim2.new(1, -28, 0, 43)
+TabBar.Parent = Main
+
+Corner(TabBar, 11)
+
+local Indicator = Instance.new("Frame")
+Indicator.BackgroundColor3 = COLORS.Accent
+Indicator.BorderSizePixel = 0
+Indicator.Position = UDim2.fromOffset(4, 4)
+Indicator.Size = UDim2.new(0.5, -6, 1, -8)
+Indicator.Parent = TabBar
+Corner(Indicator, 8)
+
+local CombatTab = Instance.new("TextButton")
+CombatTab.BackgroundTransparency = 1
+CombatTab.Position = UDim2.fromOffset(4, 4)
+CombatTab.Size = UDim2.new(0.5, -6, 1, -8)
+CombatTab.Font = Enum.Font.GothamBold
+CombatTab.Text = "🎯  Combat"
+CombatTab.TextSize = 13
+CombatTab.TextColor3 = COLORS.Text
+CombatTab.AutoButtonColor = false
+CombatTab.ZIndex = 2
+CombatTab.Parent = TabBar
+
+local VisualTab = CombatTab:Clone()
+VisualTab.Text = "👁  Visual"
+VisualTab.Position = UDim2.new(0.5, 2, 0, 4)
+VisualTab.TextColor3 = COLORS.SubText
+VisualTab.Parent = TabBar
+
+--==================================================
+-- CONTENT
+--==================================================
+
+local Content = Instance.new("Frame")
+Content.BackgroundTransparency = 1
+Content.Position = UDim2.fromOffset(14, 117)
+Content.Size = UDim2.new(1, -28, 1, -131)
+Content.Parent = Main
+
+local CombatPage = Instance.new("ScrollingFrame")
+CombatPage.BackgroundTransparency = 1
+CombatPage.BorderSizePixel = 0
+CombatPage.Size = UDim2.fromScale(1, 1)
+CombatPage.CanvasSize = UDim2.new()
+CombatPage.ScrollBarThickness = 2
+CombatPage.ScrollBarImageColor3 = COLORS.Accent
+CombatPage.Parent = Content
+
+local CombatLayout = Instance.new("UIListLayout")
+CombatLayout.Padding = UDim.new(0, 8)
+CombatLayout.Parent = CombatPage
+
+local VisualPage = CombatPage:Clone()
+VisualPage.Visible = false
+VisualPage.Parent = Content
+
+-- remove cloned layout and rebuild
+for _, Child in ipairs(VisualPage:GetChildren()) do
+    if Child:IsA("UIListLayout") then
+        Child:Destroy()
+    end
+end
+
+local VisualLayout = Instance.new("UIListLayout")
+VisualLayout.Padding = UDim.new(0, 8)
+VisualLayout.Parent = VisualPage
+
+--==================================================
+-- SECTION LABEL
+--==================================================
+
+local function CreateSection(parent, text)
+    local Label = Instance.new("TextLabel")
+    Label.BackgroundTransparency = 1
+    Label.Size = UDim2.new(1, 0, 0, 25)
+    Label.Font = Enum.Font.GothamBold
+    Label.Text = text
+    Label.TextSize = 12
+    Label.TextColor3 = COLORS.SubText
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = parent
+
+    return Label
+end
+
+CreateSection(CombatPage, "COMBAT")
+CreateSection(VisualPage, "VISUAL")
+
+--==================================================
+-- TOGGLE
+--==================================================
+
+local function CreateToggle(parent, Name)
+    local Holder = Instance.new("Frame")
+    Holder.BackgroundColor3 = COLORS.Surface
+    Holder.BorderSizePixel = 0
+    Holder.Size = UDim2.new(1, -2, 0, 47)
+    Holder.Parent = parent
+
+    Corner(Holder, 11)
+    Stroke(Holder, 0.65)
+
+    local Button = Instance.new("TextButton")
+    Button.BackgroundTransparency = 1
+    Button.Size = UDim2.fromScale(1, 1)
+    Button.Text = ""
+    Button.AutoButtonColor = false
+    Button.Parent = Holder
+
+    local Label = Instance.new("TextLabel")
+    Label.BackgroundTransparency = 1
+    Label.Position = UDim2.fromOffset(14, 0)
+    Label.Size = UDim2.new(1, -85, 1, 0)
+    Label.Font = Enum.Font.GothamMedium
+    Label.Text = Name
+    Label.TextSize = 13
+    Label.TextColor3 = COLORS.Text
+    Label.TextXAlignment = Enum.TextXAlignment.Left
+    Label.Parent = Holder
+
+    local Toggle = Instance.new("Frame")
+    Toggle.BackgroundColor3 = COLORS.Surface3
+    Toggle.BorderSizePixel = 0
+    Toggle.AnchorPoint = Vector2.new(1, 0.5)
+    Toggle.Position = UDim2.new(1, -13, 0.5, 0)
+    Toggle.Size = UDim2.fromOffset(43, 24)
+    Toggle.Parent = Holder
+
+    Corner(Toggle, 12)
+
+    local Knob = Instance.new("Frame")
+    Knob.BackgroundColor3 = COLORS.SubText
+    Knob.BorderSizePixel = 0
+    Knob.AnchorPoint = Vector2.new(0, 0.5)
+    Knob.Position = UDim2.new(0, 3, 0.5, 0)
+    Knob.Size = UDim2.fromOffset(18, 18)
+    Knob.Parent = Toggle
+
+    Corner(Knob, 9)
+
+    local Enabled = false
+
+    Button.MouseButton1Click:Connect(function()
+        Enabled = not Enabled
+
+        Tween(Toggle, 0.22, {
+            BackgroundColor3 = Enabled and COLORS.Accent or COLORS.Surface3
+        })
+
+        Tween(Knob, 0.22, {
+            Position = Enabled
+                and UDim2.new(1, -21, 0.5, 0)
+                or UDim2.new(0, 3, 0.5, 0),
+
+            BackgroundColor3 = Enabled
+                and Color3.fromRGB(255, 255, 255)
+                or COLORS.SubText
+        })
+
+        -- UI state only.
+    end)
+
+    Button.MouseEnter:Connect(function()
+        Tween(Holder, 0.15, {
+            BackgroundColor3 = COLORS.Surface2
+        })
+    end)
+
+    Button.MouseLeave:Connect(function()
+        Tween(Holder, 0.15, {
+            BackgroundColor3 = COLORS.Surface
+        })
+    end)
+
+    return Holder
+end
+--==================================================
+-- Functions
+--==================================================
+
+_G.SilentAim = false
+_G.Wallbang = false
+_G.AutoShoot = false
+
+_G._ESP = false
+_G.ESP_Boxes = false
+_G.ESP_HealthBars = false
+_G.ESP_Highlights = false
+
+local t1 = {}
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+local Camera = Workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+t1.value4 = UserInputService
+t1.value5 = Workspace
+t1.value6 = Camera
+t1.value7 = LocalPlayer
+
+_G.FOV_RADIUS = 999999
+t1.value8 = nil
+
+local MAX_DISTANCE = 300
+local BOX_COLOR = Color3.fromRGB(255, 255, 255)
+local HEALTH_BG_COLOR = Color3.fromRGB(50, 0, 0)
+local HEALTH_GOOD_COLOR = Color3.fromRGB(0, 255, 0)
+local HEALTH_LOW_COLOR = Color3.fromRGB(255, 0, 0)
+local FRIEND_COLOR = Color3.fromRGB(0, 0, 255)
+local ENEMY_COLOR = Color3.fromRGB(255, 0, 0)
+
+local MainTab = window:CreateTab({ Name = "Main", Icon = 4483362458 })
+local VisualsTab = window:CreateTab({ Name = "Visuals", Icon = 4370318685 })
+
+MainTab:CreateToggle({
+    Name = "Silent Aim",
+    Callback = function(value) _G.SilentAim = value end,
+})
+
+MainTab:CreateToggle({
+    Name = "Wallbang",
+    Callback = function(value) _G.Wallbang = value end,
+})
+
+MainTab:CreateToggle({
+    Name = "AutoShoot",
+    Callback = function(value) _G.AutoShoot = value end,
+})
+
+VisualsTab:CreateToggle({
+    Name = "Enable ESP",
+    Callback = function(value) _G.Master_ESP = value end,
+})
+
+VisualsTab:CreateToggle({
+    Name = "Show Boxes",
+    Callback = function(value) _G.ESP_Boxes = value end,
+})
+
+VisualsTab:CreateToggle({
+    Name = "Show Health Bars",
+    Callback = function(value) _G.ESP_HealthBars = value end,
+})
+
+VisualsTab:CreateToggle({
+    Name = "Highlight Enemy",
+    Callback = function(value) _G.ESP_Highlights = value end,
+})
+
+local function getCharacterBounds(character)
+    local minX, minY = math.huge, math.huge
+    local maxX, maxY = -math.huge, -math.huge
+    local onScreenAny = false
+
+    for _, part in ipairs(character:GetChildren()) do
+        if part:IsA("BasePart") then
+            local cframe, size = part.CFrame, part.Size
+            local halfSize = size / 2
+
+            local vertices = {
+                cframe * Vector3.new(-halfSize.X, -halfSize.Y, -halfSize.Z),
+                cframe * Vector3.new(halfSize.X, -halfSize.Y, -halfSize.Z),
+                cframe * Vector3.new(-halfSize.X, halfSize.Y, -halfSize.Z),
+                cframe * Vector3.new(halfSize.X, halfSize.Y, -halfSize.Z),
+                cframe * Vector3.new(-halfSize.X, -halfSize.Y, halfSize.Z),
+                cframe * Vector3.new(halfSize.X, -halfSize.Y, halfSize.Z),
+                cframe * Vector3.new(-halfSize.X, halfSize.Y, halfSize.Z),
+                cframe * Vector3.new(halfSize.X, halfSize.Y, halfSize.Z)
+            }
+
+            for _, vertex in ipairs(vertices) do
+                local screenPos, onScreen = Camera:WorldToViewportPoint(vertex)
+                if onScreen then
+                    onScreenAny = true
+                    if screenPos.X < minX then minX = screenPos.X end
+                    if screenPos.X > maxX then maxX = screenPos.X end
+                    if screenPos.Y < minY then minY = screenPos.Y end
+                    if screenPos.Y > maxY then maxY = screenPos.Y end
+                end
+            end
+        end
+    end
+    return onScreenAny, Vector2.new(minX, minY), Vector2.new(maxX, maxY)
+end
+
+local function applyHighlight(player, color)
+    if player.Character then
+        local highlight = player.Character:FindFirstChild("GetReal")
+        if _G.Master_ESP and _G.ESP_Highlights then
+            if not highlight then
+                highlight = Instance.new("Highlight")
+                highlight.Name = "GetReal"
+                highlight.Adornee = player.Character
+                highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                highlight.Parent = player.Character
+            end
+            highlight.FillColor = color
+            highlight.OutlineColor = Color3.fromRGB(255, 255, 255)
+        else
+            if highlight then
+                highlight:Destroy()
+            end
+        end
+    end
+end
+local function createESP(player)
+    if player == LocalPlayer then return end
+
+    local box = Drawing.new("Square")
+    local healthBarBg = Drawing.new("Line")
+    local healthBar = Drawing.new("Line")
+
+    box.Color = BOX_COLOR; box.Thickness = 1; box.Filled = false
+    healthBarBg.Thickness = 2; healthBarBg.Color = HEALTH_BG_COLOR
+    healthBar.Thickness = 2
+
+    local function clearAllVisibility()
+        box.Visible = false
+        healthBarBg.Visible = false
+        healthBar.Visible = false
+    end
+
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        local character = player.Character
+        local myCharacter = LocalPlayer.Character
+        
+        if not character or not character:IsDescendantOf(workspace) or not myCharacter then
+            clearAllVisibility()
+            if not player:IsDescendantOf(Players) then
+                box:Remove(); healthBarBg:Remove(); healthBar:Remove()
+                connection:Disconnect()
+            end
+            return
+        end
+
+        local rootPart = character:FindFirstChild("HumanoidRootPart")
+        local myRootPart = myCharacter:FindFirstChild("HumanoidRootPart")
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        
+        local assignedColor = (LocalPlayer.TeamColor == player.TeamColor) and FRIEND_COLOR or ENEMY_COLOR
+        applyHighlight(player, assignedColor)
+
+        if rootPart and myRootPart and humanoid and humanoid.Health > 0 and _G.Master_ESP then
+            local distance = (myRootPart.Position - rootPart.Position).Magnitude
+            if distance > MAX_DISTANCE then
+                clearAllVisibility()
+                return
+            end
+
+            local isValid, topLeft, bottomRight = getCharacterBounds(character)
+            if isValid then
+                local boxWidth = bottomRight.X - topLeft.X
+                local boxHeight = bottomRight.Y - topLeft.Y
+
+                if _G.ESP_Boxes then
+                    box.Size = Vector2.new(boxWidth + 4, boxHeight + 4)
+                    box.Position = Vector2.new(topLeft.X - 2, topLeft.Y - 2)
+                    box.Visible = true
+                else
+                    box.Visible = false
+                end
+
+                if _G.ESP_HealthBars then
+                    local healthPercentage = humanoid.Health / humanoid.MaxHealth
+                    local healthBarX = topLeft.X - 6
+                    
+                    healthBarBg.From = Vector2.new(healthBarX, bottomRight.Y + 2)
+                    healthBarBg.To = Vector2.new(healthBarX, topLeft.Y - 2)
+                    healthBarBg.Visible = true
+
+                    local healthHeight = (boxHeight + 4) * healthPercentage
+                    healthBar.From = Vector2.new(healthBarX, bottomRight.Y + 2)
+                    healthBar.To = Vector2.new(healthBarX, (bottomRight.Y + 2) - healthHeight)
+                    healthBar.Color = HEALTH_LOW_COLOR:Lerp(HEALTH_GOOD_COLOR, healthPercentage)
+                    healthBar.Visible = true
+                else
+                    healthBarBg.Visible = false
+                    healthBar.Visible = false
+                end
+            else
+                clearAllVisibility()
+            end
+        else
+            clearAllVisibility()
+        end
+    end)
+end
+
+for _, player in ipairs(Players:GetPlayers()) do createESP(player) end
+Players.PlayerAdded:Connect(createESP)
+
+function t1.value10(p6, p7)
+    if _G.Wallbang then
+        return true 
+    end
+    local CFramePosition = t1.value6.CFrame.Position
+    local v24 = p6.Position - CFramePosition
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterType = Enum.RaycastFilterType.Exclude
+    raycastParams.FilterDescendantsInstances = {t1.value7.Character, p7, t1.value6}
+    raycastParams.IgnoreWater = true
+    return t1.value5:Raycast(CFramePosition, v24, raycastParams) == nil
+end
+
+RunService.RenderStepped:Connect(function()
+    if _G.SilentAim then
+        local targetNode = nil
+        local currentMaxDist = _G.FOV_RADIUS
+        local currentMousePos = t1.value4:GetMouseLocation()
+        local characterFolder = t1.value5:FindFirstChild("Characters")
+        local structuralTargets = characterFolder and characterFolder:GetChildren() or t1.value5:GetChildren()
+        
+        for _, v in ipairs(structuralTargets) do
+            if v:IsA("Model") and v ~= t1.value7.Character then
+                local Humanoid = v:FindFirstChildOfClass("Humanoid")
+                if Humanoid and Humanoid.Health > 0 then
+                    local mySide = t1.value7:GetAttribute("MatchSide")
+                    local enemySide = v:GetAttribute("MatchSide")
+                    
+                    if mySide and enemySide and mySide == enemySide then
+                        if v:GetAttribute("BotMatchBot") ~= true and v:GetAttribute("Decoy") ~= true then
+                            continue
+                        end
+                    end
+                    
+                    local structuralPart = v:FindFirstChild("Head") or v:FindFirstChild("HumanoidRootPart")
+                    if structuralPart then
+                        local screenPos, onScreen = t1.value6:WorldToViewportPoint(structuralPart.Position)
+                        
+                        if onScreen or _G.Wallbang then
+                            local distance = (Vector2.new(screenPos.X, screenPos.Y) - currentMousePos).Magnitude
+                            if distance < currentMaxDist and t1.value10(structuralPart, v) then
+                                targetNode = structuralPart
+                                currentMaxDist = distance
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        t1.value8 = targetNode 
+    else
+        t1.value8 = nil
+    end
+end)
+
+t1.value11 = hookmetamethod(game, "__namecall", function(self, ...)
+    local method = getnamecallmethod()
+    local validCaller = not checkcaller()
+    local arguments = {...}
+
+    if validCaller and _G.SilentAim and t1.value8 then
+        local dataPacket = arguments[1]
+        if type(dataPacket) == "table" then
+            if method == "FireServer" then
+                if self.Name == "ThrowReplicate" then
+                    dataPacket.target = t1.value8.Position
+                    return t1.value11(self, unpack(arguments))
+                elseif self.Name == "ShootReplicate" then
+                    dataPacket.hitInstance = t1.value8
+                    dataPacket.hitPos = t1.value8.Position
+                    dataPacket.to = t1.value8.Position
+                    dataPacket.isCharacterHit = true
+                    
+                    if _G.Wallbang then
+                        dataPacket.origin = t1.value8.Position + Vector3.new(0, 1, 0)
+                    end
+                    
+                    if type(dataPacket.segments) == "table" and #dataPacket.segments > 0 then
+                        for _, seg in ipairs(dataPacket.segments) do
+                            seg.hitInstance = t1.value8
+                            seg.hitPos = t1.value8.Position
+                            seg.isCharacterHit = true
+                        end
+                    end
+                    return t1.value11(self, unpack(arguments))
+                end
+            elseif method == "Fire" then
+                if self.Name == "SpawnKnife" then
+                    dataPacket.target = t1.value8.Position
+                    return t1.value11(self, unpack(arguments))
+                elseif self.Name == "SpawnBullet" then
+                    dataPacket.hitInstance = t1.value8
+                    dataPacket.hitPos = t1.value8.Position
+                    dataPacket.to = t1.value8.Position
+                    dataPacket.isCharacterHit = true
+                    
+                    if _G.Wallbang then
+                        dataPacket.origin = t1.value8.Position + Vector3.new(0, 1, 0)
+                    end
+                    
+                    if type(dataPacket.segments) == "table" and #dataPacket.segments > 0 then
+                        for _, seg in ipairs(dataPacket.segments) do
+                            seg.hitInstance = t1.value8
+                            seg.hitPos = t1.value8.Position
+                            seg.isCharacterHit = true
+                        end
+                    end
+                    return t1.value11(self, unpack(arguments))
+                end
+            end
+        end
+    end
+    return t1.value11(self, ...)
+end)
+
+task.spawn(function()
+    if not game:IsLoaded() then
+        game.Loaded:Wait()
+    end
+    
+    local GuiService = game:GetService("GuiService")
+    
+    while task.wait(0.05) do 
+        if _G.AutoShoot and _G.SilentAim and t1.value8 and not GuiService.MenuIsOpen then
+            if t1.value4.MouseBehavior == Enum.MouseBehavior.LockCenter then
+                mouse1click()
+            end
+        end
+    end
+end)
+--==================================================
+-- TAB ANIMATION
+--==================================================
+
+local function ShowCombat()
+    CombatPage.Visible = true
+    VisualPage.Visible = false
+
+    Tween(Indicator, 0.28, {
+        Position = UDim2.fromOffset(4, 4)
+    })
+
+    Tween(CombatTab, 0.2, {
+        TextColor3 = COLORS.Text
+    })
+
+    Tween(VisualTab, 0.2, {
+        TextColor3 = COLORS.SubText
+    })
+end
+
+local function ShowVisual()
+    CombatPage.Visible = false
+    VisualPage.Visible = true
+
+    Tween(Indicator, 0.28, {
+        Position = UDim2.new(0.5, 2, 0, 4)
+    })
+
+    Tween(CombatTab, 0.2, {
+        TextColor3 = COLORS.SubText
+    })
+
+    Tween(VisualTab, 0.2, {
+        TextColor3 = COLORS.Text
+    })
+end
+
+CombatTab.MouseButton1Click:Connect(ShowCombat)
+VisualTab.MouseButton1Click:Connect(ShowVisual)
+
+--==================================================
+-- FLOATING ICON + DRAGGING
+--==================================================
+
+local Floating = Instance.new("ImageButton")
+Floating.Name = "FloatingIcon"
+Floating.AnchorPoint = Vector2.new(0.5, 0.5)
+Floating.Position = UDim2.new(0, 55, 0.5, 0)
+Floating.Size = UDim2.fromOffset(48, 48)
+Floating.BackgroundColor3 = COLORS.Surface
+Floating.BorderSizePixel = 0
+Floating.Image = ICON
+Floating.Visible = false
+Floating.AutoButtonColor = false
+Floating.Parent = Gui
+
+Corner(Floating, 16)
+Stroke(Floating, 0.25)
+
+local FloatingDragging = false
+local FloatingDragStart
+local FloatingStartPosition
+local FloatingMoved = false
+
+Floating.InputBegan:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1
+    or Input.UserInputType == Enum.UserInputType.Touch then
+
+        FloatingDragging = true
+        FloatingMoved = false
+        FloatingDragStart = Input.Position
+        FloatingStartPosition = Floating.Position
+
+        Input.Changed:Connect(function()
+            if Input.UserInputState == Enum.UserInputState.End then
+                FloatingDragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(Input)
+    if not FloatingDragging then return end
+
+    if Input.UserInputType == Enum.UserInputType.MouseMovement
+    or Input.UserInputType == Enum.UserInputType.Touch then
+
+        local Delta = Input.Position - FloatingDragStart
+
+        if Delta.Magnitude > 5 then
+            FloatingMoved = true
+        end
+
+        Floating.Position = UDim2.new(
+            FloatingStartPosition.X.Scale,
+            FloatingStartPosition.X.Offset + Delta.X,
+            FloatingStartPosition.Y.Scale,
+            FloatingStartPosition.Y.Offset + Delta.Y
+        )
+    end
+end)
+
+-- Only open when it was a tap, not a drag
+Floating.InputEnded:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1
+    or Input.UserInputType == Enum.UserInputType.Touch then
+
+        if not FloatingMoved then
+            OpenUI()
+        end
+    end
+end)
+
+--==================================================
+-- OPEN / CLOSE
+--==================================================
+
+local Closed = false
+
+local function OpenUI()
+    if not Closed then return end
+
+    Closed = false
+    Floating.Visible = false
+
+    Main.Visible = true
+    Main.Size = UDim2.fromOffset(20, 20)
+
+    Tween(Main, 0.45, {
+        Size = OPEN_SIZE
+    }, Enum.EasingStyle.Back)
+end
+
+local function CloseUI()
+    if Closed then return end
+
+    Closed = true
+
+    local T = Tween(Main, 0.3, {
+        Size = UDim2.fromOffset(20, 20)
+    }, Enum.EasingStyle.Quint, Enum.EasingDirection.In)
+
+    T.Completed:Connect(function()
+        Main.Visible = false
+
+        Floating.Visible = true
+        Floating.Size = UDim2.fromOffset(10, 10)
+
+        Tween(Floating, 0.4, {
+            Size = UDim2.fromOffset(58, 58)
+        }, Enum.EasingStyle.Back)
+    end)
+end
+
+Close.MouseButton1Click:Connect(CloseUI)
+Floating.MouseButton1Click:Connect(OpenUI)
+
+--==================================================
+-- CLOSE HOVER
+--==================================================
+
+Close.MouseEnter:Connect(function()
+    Tween(Close, 0.15, {
+        BackgroundColor3 = COLORS.Red
+    })
+
+    Tween(Close, 0.15, {
+        TextColor3 = Color3.fromRGB(255,255,255)
+    })
+end)
+
+Close.MouseLeave:Connect(function()
+    Tween(Close, 0.15, {
+        BackgroundColor3 = COLORS.Surface2
+    })
+
+    Tween(Close, 0.15, {
+        TextColor3 = COLORS.SubText
+    })
+end)
+
+--==================================================
+-- DRAGGING
+--==================================================
+
+local Dragging = false
+local DragStart
+local StartPosition
+
+Header.InputBegan:Connect(function(Input)
+    if Input.UserInputType == Enum.UserInputType.MouseButton1
+    or Input.UserInputType == Enum.UserInputType.Touch then
+
+        Dragging = true
+        DragStart = Input.Position
+        StartPosition = Main.Position
+
+        Input.Changed:Connect(function()
+            if Input.UserInputState == Enum.UserInputState.End then
+                Dragging = false
+            end
+        end)
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(Input)
+    if not Dragging then return end
+
+    if Input.UserInputType == Enum.UserInputType.MouseMovement
+    or Input.UserInputType == Enum.UserInputType.Touch then
+
+        local Delta = Input.Position - DragStart
+
+        Main.Position = UDim2.new(
+            StartPosition.X.Scale,
+            StartPosition.X.Offset + Delta.X,
+            StartPosition.Y.Scale,
+            StartPosition.Y.Offset + Delta.Y
+        )
+    end
+end)
+
+--==================================================
+-- INITIAL WINDOW ANIMATION
+--==================================================
+
+Main.Visible = true
+Main.Size = UDim2.fromOffset(15, 15)
+
+Tween(Main, 0.55, {
+    Size = OPEN_SIZE
+}, Enum.EasingStyle.Back)
+
+--==================================================
+-- DONE
+--==================================================
